@@ -32,8 +32,8 @@ mag_df = pd.DataFrame(magnitudes)
 master_df = pd.concat(dict(General = general_df, Magnitudes = mag_df, Phases = phase_df, QuantizedPhases = quant_phase_df), axis=1)
 #%%
 
-save_info = f'Bach_{window_size}beat_{strategy}'
-title = f'Bach: {window_size}-Beat Window, {strategy}'
+save_info = f'NAME_{window_size}beat_{strategy}'
+title = f'NAME: {window_size}-Beat Window, {strategy}'
 
 #%%
 Graph.make_panorama(df=master_df, title=title, savehtml=None)
