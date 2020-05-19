@@ -13,7 +13,7 @@ rgb_colors = {'f1_colors' : ['rgba(130,202,252,0.4)', 'rgba(61,122,253,0.6)', 'r
               'f6_colors' : ['rgba(211,182,131,0.4)', 'rgba(127,104,78,0.6)', 'rgba(65,2,0,1)']}
 
 
-def make_panorama(df, color_dict=rgb_colors, title=None,savehtml=None):
+def make_panorama(df, color_dict=rgb_colors, title=None, savehtml=None):
     fig = make_subplots(specs=[[{'secondary_y': True}]])
     fig.update_layout(autosize=False, width=1000, height=400)
     
@@ -66,7 +66,8 @@ def make_panorama(df, color_dict=rgb_colors, title=None,savehtml=None):
             "Magnitude: %{y}<br>"+
             "Original Array: %{text}",  
         ), secondary_y=True)
-        
+    
+    # Added an invisible sine wave to keep the scale from readjusting as elements are added or taken away from the graph.    
     fig.add_trace(go.Scatter(
         x=df['General']['Window Number'],
         y=[180 * sin(x) for x in range(len(df['General']['Window Number']))],
@@ -101,7 +102,7 @@ def make_panorama(df, color_dict=rgb_colors, title=None,savehtml=None):
 
     
     if savehtml:
-        fig.write_html(f"C:\\Users\\jennd\\Documents\\Dissertation\\Images\\Interactive Graphs\\Messiaen\\{savehtml}.html")
+        fig.write_html(f'{savehtml}_Panorama.html')
     
     if savehtml == None:
         fig.show()
@@ -195,7 +196,7 @@ def individual_panoramas(df, color_dict, title=None, savehtml=None):
 
         
         if savehtml:
-            fig.write_html(f"C:\\Users\\jennd\\Documents\\Dissertation\\Images\\Interactive Graphs\\Messiaen\\{savehtml}_-_f{i}.html")
+            fig.write_html(f'{savehtml}_-_f{i}.html')
 
 
 def magnitudes_panorama(df, color_dict, title=None,savehtml=None):
@@ -238,6 +239,6 @@ def magnitudes_panorama(df, color_dict, title=None,savehtml=None):
 
     
     if savehtml:
-        fig.write_html(f"C:\\Users\\jennd\\Documents\\Dissertation\\Images\\Interactive Graphs\\Messiaen\\{savehtml}_-_Magnitudes.html")
+        fig.write_html(f'{savehtml}_-_Magnitudes.html')
     
     # fig.show()
