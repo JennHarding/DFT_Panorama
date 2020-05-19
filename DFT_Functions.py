@@ -3,6 +3,7 @@ from music21 import stream, note, pitch, chord, meter, corpus, converter
 
 # import DFT_Corpus as Corpus
 import DFT_MultisetClass as MC
+import DFT_Corpus as CP
 
 
 def quantize_list(angle, quant=12):
@@ -13,7 +14,10 @@ def quantize_list(angle, quant=12):
   
 
 def parse_score(score_string, excerpt=False):
-    working_score = corpus.parse(score_string)
+    if score_string in CP.music21_corpus:
+        working_score = corpus.parse(score_string)
+    elif score_string in CP.local_corpus:
+        working_score = converter.parse(score_string)
 
     if excerpt:
         return working_score.measures(excerpt[0], excerpt[1])
