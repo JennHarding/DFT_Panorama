@@ -8,8 +8,6 @@ import DFT_Graphing as Graph
 
 user_inputs = UI.get_user_input()
 
-repertoire, excerpt, window_size, strategy, log_weight = user_inputs.values()
-
 score_data = Funcs.score_to_data(user_inputs.values())
 
 # %%
@@ -32,18 +30,18 @@ mag_df = pd.DataFrame(magnitudes)
 master_df = pd.concat(dict(General = general_df, Magnitudes = mag_df, Phases = phase_df, QuantizedPhases = quant_phase_df), axis=1)
 #%%
 
-save_info = f'NAME_{window_size}beat_{strategy}'
-title = f'NAME: {window_size}-Beat Window, {strategy}'
+save_info = f"NAME_{user_inputs['window']}beat_{user_inputs['strategy']}"
+title = f"NAME: {user_inputs['window']}-Beat Window, {user_inputs['strategy']}"
 
 #%%
 Graph.make_panorama(df=master_df, title=title, savehtml=None)
 
 #%%
 
-Graph.individual_panoramas(df=master_df, color_dict=Graph.rgb_colors, title=title, savehtml=save_info)
+Graph.individual_panorama(df=master_df, coefficient=3, color_dict=Graph.rgb_colors, title=title, savehtml=None)
 
 # %%
 
-Graph.magnitudes_panorama(df=master_df, color_dict=Graph.rgb_colors, title=title, savehtml=save_info)
+Graph.magnitudes_panorama(df=master_df, color_dict=Graph.rgb_colors, title=title, savehtml=None)
 
 # %%

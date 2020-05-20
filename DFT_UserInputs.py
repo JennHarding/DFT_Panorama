@@ -80,3 +80,5 @@ def get_user_input():
     ui.mainloop()
 
     return(dict(config_list))
+
+user_inputs = get_user_input()

@@ -1,19 +1,40 @@
 
 from music21 import stream, note, pitch, chord, meter, corpus, converter
 
-# import DFT_Corpus as Corpus
 import DFT_MultisetClass as MC
 import DFT_Corpus as CP
 
 
 def quantize_list(angle, quant=12):
+    """Quantizes the raw phase data to one of the 12 nodes (30 degrees apart).
+
+    Arguments:
+        angle {float} -- raw phase data
+
+    Keyword Arguments:
+        quant {int} -- number of nodes on the component circle (default: {12})
+
+    Returns:
+        float -- quantized data
+    """
     spacing = 360 / quant
     q = angle/spacing
     q = round(q)  
     return q * spacing
   
 
-def parse_score(score_string, excerpt=False):
+def parse_score(score_string, excerpt=None):
+    """Converts an encoded musical score into a music21 stream object.
+
+    Arguments:
+        score_string {string} -- path to file
+
+    Keyword Arguments:
+        excerpt {tuple} -- beginning and ending measures if it is an excerpt (default: {None})
+
+    Returns:
+        stream -- music21 stream object
+    """
     if score_string in CP.music21_corpus:
         working_score = corpus.parse(score_string)
     elif score_string in CP.local_corpus:
@@ -26,6 +47,14 @@ def parse_score(score_string, excerpt=False):
 
 
 def split_time_signature(numerator):
+    """Divides the numerator of a time signature into its beat groupings; e.g. 11 becomes 3+3+3+2.
+
+    Arguments:
+        numerator {int} -- numerator of a time signature
+
+    Returns:
+        list -- all of the beat groupings
+    """
     if numerator < 4:
         return [numerator]
     elif numerator == 4:
@@ -35,6 +64,14 @@ def split_time_signature(numerator):
 
 
 def convert_time_signature(ts):
+    """Changes a time signature object to a meter sequence object.
+
+    Arguments:
+        ts {time signature (music21)} -- music21 time signature object
+
+    Returns:
+        meter sequence (music21) -- music21 meter sequence object divided into beat groupings
+    """
     ms = meter.MeterSequence(ts.ratioString)
     if ms.numerator in [2, 3, 4]:
         ms.partitionByCount(ms.numerator)
@@ -45,6 +82,14 @@ def convert_time_signature(ts):
 
 
 def get_beat_offsets_from_score(score):
+    """Finds the offset of every beat in the score.
+
+    Arguments:
+        score {stream (music21)} -- music21 string object
+
+    Returns:
+        list -- list of all offsets that are beats
+    """
     time_signature_list = []
     meter_sequence_list = []
     offset_list = [0]
@@ -66,6 +111,16 @@ def get_beat_offsets_from_score(score):
 
 
 def update_array(array, note_, strategy):
+    """Increments the array at a particular pitch class's position based on the requested strategy.
+
+    Arguments:
+        array {array} -- array with 12 positions representing the 12 pitch classes
+        note_ {note (music21)} -- music21 note object
+        strategy {string} -- option of 'Onset', 'Duration', or 'Flat'
+
+    Returns:
+        arra -- array after incrementation
+    """
     if strategy == 'Onset':
         array[note_.pitch.pitchClass] += 1
     elif strategy == 'Duration':
@@ -76,12 +131,36 @@ def update_array(array, note_, strategy):
 
 
 def get_measure_number(score, offset):
+    """Finds the measure number of an object given its offset in the score
+
+    Arguments:
+        score {stream (music21)} -- music21 stream object
+        offset {float} -- distance from the beginning of the piece measured in quarter-note lengths
+
+    Returns:
+        int -- the measure number
+    """
     beat_measure_tuple = score.beatAndMeasureFromOffset(offset)
     measure_number = beat_measure_tuple[1].number
     return measure_number
     
     
 def sliding_window(score, beat_offset_list, window_size, strategy, log=True, edo=12):
+    """Runs the sliding window across the score and generates arrays of pitch classes to be used as DFT inputs.
+
+    Arguments:
+        score {stream (music21)} -- music21 stream object
+        beat_offset_list {list} -- list of the offsets of all beats
+        window_size {int} -- length of sliding window measured in beats (NOT quarter-lengths)
+        strategy {string} -- strategy options are 'Onset', 'Duration', and 'Flat'
+
+    Keyword Arguments:
+        log {bool} -- applies a logarithmic weight to the array (default: {True})
+        edo {int} -- number of pitches that equally divide the octave (default: {12})
+
+    Returns:
+        list -- list of all multiset arrays
+    """
     all_arrays = []
     for idx, window_begin in enumerate(beat_offset_list[:-window_size]):
         window_end = beat_offset_list[idx + window_size]
@@ -118,7 +197,14 @@ def sliding_window(score, beat_offset_list, window_size, strategy, log=True, edo
 
 
 def score_to_data(config):  
-     
+    """Generates all multisets by sliding a window over the score
+
+    Arguments:
+        config {tuple} -- all user inputs
+
+    Returns:
+        list -- all multisets
+    """
     repertoire, excerpt, window, strat, log = config
     parsed_score = parse_score(score_string=repertoire, excerpt=excerpt)
     beat_offset_list = get_beat_offsets_from_score(score=parsed_score.parts[0])
