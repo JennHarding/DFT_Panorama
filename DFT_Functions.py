@@ -3,7 +3,7 @@ from music21 import stream, note, pitch, chord, meter, corpus, converter
 import numpy as np
 
 import DFT_Corpus as CP
-from DFT_MultisetClass import dft_array
+from DFT_array_class import dft_array
 
 
 def quantize_array(array, quant=12):
