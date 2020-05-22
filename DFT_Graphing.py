@@ -14,6 +14,16 @@ rgb_colors = {'f1_colors' : ['rgba(130,202,252,0.4)', 'rgba(61,122,253,0.6)', 'r
 
 
 def make_panorama(df, color_dict=rgb_colors, title=None, savehtml=None):
+    """Makes master panorama interactive plot with all magnitudes, all phases, and all quantized phases.
+
+    Arguments:
+        df {dataFrame} -- pandas dataframe 
+
+    Keyword Arguments:
+        color_dict {dictionary} -- dictionary of rgba colors (default: {rgb_colors})
+        title {string} -- title of the plot (default: {None})
+        savehtml {string} -- save location for the html file (default: {None})
+    """
     fig = make_subplots(specs=[[{'secondary_y': True}]])
     fig.update_layout(autosize=False, width=1000, height=400)
     
@@ -96,6 +106,17 @@ def make_panorama(df, color_dict=rgb_colors, title=None, savehtml=None):
 
 
 def individual_panorama(df, coefficient, color_dict=rgb_colors, title=None, savehtml=None):
+    """Makes panorama interactive plot for an individual component with its magnitude, phase, and quantized phase.
+
+    Arguments:
+        df {dataFrame} -- pandas dataframe 
+        coefficient {int} -- Fourier coefficient for the component to be plotted
+
+    Keyword Arguments:
+        color_dict {dictionary} -- dictionary of rgba colors (default: {rgb_colors})
+        title {string} -- title of the plot (default: {None})
+        savehtml {string} -- save location for the html file (default: {None})
+    """
     i = coefficient
     fig = make_subplots(specs=[[{'secondary_y': True}]])
     fig.update_layout(autosize=False, width=1000, height=400)
@@ -181,6 +202,16 @@ def individual_panorama(df, coefficient, color_dict=rgb_colors, title=None, save
 
 
 def magnitudes_panorama(df, color_dict=rgb_colors, title=None,savehtml=None):
+    """Makes panorama interactive plot with all magnitudes.
+
+    Arguments:
+        df {dataFrame} -- pandas dataframe 
+
+    Keyword Arguments:
+        color_dict {dictionary} -- dictionary of rgba colors (default: {rgb_colors})
+        title {string} -- title of the plot (default: {None})
+        savehtml {string} -- save location for the html file (default: {None})
+    """
     fig = make_subplots(specs=[[{'secondary_y': True}]])
     fig.update_layout(autosize=False, width=1000, height=400)
     
